@@ -423,6 +423,80 @@
             z-index: 0;
             transition: opacity 0.3s;
         }
+        
+        /* MODALE */
+        .modal-overlay {
+          display: flex;
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.85);
+          z-index: 1000;
+          justify-content: center;
+          align-items: center;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active {
+          opacity: 1;
+          pointer-events: all;
+        }
+        .modal-box {
+          background: #111;
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 16px;
+          padding: 30px;
+          max-width: 90vw;
+          position: relative;
+          transform: translateY(20px) scale(0.97);
+          transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+          opacity: 0;
+        }
+        .modal-overlay.active .modal-box {
+          transform: translateY(0) scale(1);
+          opacity: 1;
+        }
+
+        .modal-title {
+          color: var(--text);
+          text-align: center;
+          margin-bottom: 20px;
+          font-size: 1.3rem;
+          letter-spacing: 2px;
+        }
+        .modal-close {
+          position: absolute;
+          top: 15px;
+          right: 20px;
+          background: none;
+          border: none;
+          color: white;
+          font-size: 1.4rem;
+          cursor: pointer;
+          opacity: 0.7;
+          transition: opacity 0.2s;
+        }
+        .modal-close:hover {
+          opacity: 1;
+        }
+        .shorts-scroll {
+          display: flex;
+          gap: 15px;
+          overflow-x: auto;
+          padding-bottom: 10px;
+          scrollbar-width: thin;
+          scrollbar-color: rgba(255,255,255,0.2) transparent;
+        }
+        .short-item {
+          flex-shrink: 0;
+        }
+        .short-item iframe {
+          width: 200px;
+          height: 355px;
+          border-radius: 10px;
+          display: block;
+        }
+
     </style>
 </head>
 <body>
@@ -508,10 +582,34 @@
             <div class="project-tags"><span class="project-tag">Freelance</span><span class="project-tag">Script</span><span class="project-tag">Montage</span></div>
             <div class="project-title">Curieux ! Live</div>
             <div class="project-desc">Écriture et montage de vidéos courtes. Travail sur le rythme, la narration et l’efficacité des formats, avec des contenus ayant atteint jusqu’à 755k vues.</div>
-            <a href="https://www.instagram.com/reel/DVJituSkiZk/" class="project-link" target="_blank">Voir le projet</a>
+            <a onclick="ouvrirModal('modal-projet1')" class="project-link" style="cursor:pointer;">Voir le projet →</a>
           </div>
         </div>
 
+        <!-- MODALE PROJET 1 -->
+        <div id="modal-projet1" class="modal-overlay" onclick="fermerModal('modal-projet1')">
+          <div class="modal-box" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="fermerModal('modal-projet1')">✕</button>
+            <h2 class="modal-title"></h2>
+            <div class="shorts-scroll">
+                
+              <div class="short-item">
+                <iframe src="https://www.youtube.com/embed/iSCrmUu3Pt4" frameborder="0" allowfullscreen></iframe>
+              </div>
+              <div class="short-item">
+                <iframe src="https://www.youtube.com/embed/JDHjWzt9N8o" frameborder="0" allowfullscreen></iframe>
+              </div>
+              <div class="short-item">
+                <iframe src="https://www.youtube.com/embed/5OamQpHh0bE" frameborder="0" allowfullscreen></iframe>
+              </div>
+              <div class="short-item">
+                <iframe src="https://www.youtube.com/embed/M4QepnlmiZ8" frameborder="0" allowfullscreen></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
         <!-- Projet 2 -->
         <div class="project-card">
           <img
@@ -663,6 +761,16 @@
             glow.style.left = e.clientX + 'px';
             glow.style.top = e.clientY + 'px';
         });
+        
+        function ouvrirModal(id) {
+          document.getElementById(id).classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+        function fermerModal(id) {
+          document.getElementById(id).classList.remove('active');
+          document.body.style.overflow = '';
+        }
+
     </script>
 
 </body>
