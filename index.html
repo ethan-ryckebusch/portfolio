@@ -591,7 +591,7 @@
             <div class="project-tags"><span class="project-tag">Freelance</span><span class="project-tag">Script</span><span class="project-tag">Montage</span></div>
             <div class="project-title">Curieux ! Live</div>
             <div class="project-desc">Écriture et montage de vidéos courtes. Travail sur le rythme, la narration et l’efficacité des formats, avec des contenus ayant atteint jusqu’à 755k vues.</div>
-            <a onclick="ouvrirModal('modal-projet1')" class="project-link" style="cursor:pointer;">Voir le projet →</a>
+            <a onclick="ouvrirModal('modal-projet1')" class="project-link" style="cursor:pointer;">Voir les projets →</a>
           </div>
         </div>
 
@@ -804,6 +804,33 @@
           });
         });
 
+        // ─── TOUCH BLOB (mobile) ───
+        document.addEventListener('touchmove', (e) => {
+            const touch = e.touches[0];
+            glow.style.left = touch.clientX + 'px';
+            glow.style.top = touch.clientY + 'px';
+            glow.style.opacity = '1';
+        }, { passive: true });
+
+        document.addEventListener('touchend', () => {
+            glow.style.opacity = '0';
+        });
+
+        // ─── GYROSCOPE (mobile) ───
+        if (window.DeviceOrientationEvent) {
+            window.addEventListener('deviceorientation', (e) => {
+                const blob1 = document.querySelector('.blob1');
+                const blob2 = document.querySelector('.blob2');
+
+                // beta = inclinaison avant/arrière (-180 à 180)
+                // gamma = inclinaison gauche/droite (-90 à 90)
+                const x = (e.gamma / 90) * 40;  // max 40px de déplacement
+                const y = (e.beta / 180) * 40;
+
+                blob1.style.transform = `translate(${x}px, ${y}px)`;
+                blob2.style.transform = `translate(${-x}px, ${-y}px)`;
+            });
+        }
 
     </script>
 
