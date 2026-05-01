@@ -446,7 +446,7 @@
           border: 1px solid rgba(255,255,255,0.1);
           border-radius: 16px;
           padding: 30px;
-          max-width: 90vw;
+          max-width: min(90vw, 750px);
           position: relative;
           transform: translateY(20px) scale(0.97);
           transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
@@ -495,6 +495,15 @@
           height: 355px;
           border-radius: 10px;
           display: block;
+        }
+        body.modal-open {
+          overflow: hidden;
+        }
+
+        nav.modal-open {
+          pointer-events: none;
+          opacity: 0.4;
+          transition: opacity 0.3s ease;
         }
 
     </style>
@@ -604,6 +613,15 @@
               </div>
               <div class="short-item">
                 <iframe src="https://www.youtube.com/embed/M4QepnlmiZ8" frameborder="0" allowfullscreen></iframe>
+              </div>
+              <div class="short-item">
+                <iframe src="https://www.youtube.com/embed/fQcRiNrDiu4" frameborder="0" allowfullscreen></iframe>
+              </div>
+              <div class="short-item">
+                <iframe src="https://www.youtube.com/embed/rKBYTqwsbbU" frameborder="0" allowfullscreen></iframe>
+              </div>
+              <div class="short-item">
+                <iframe src="https://www.youtube.com/embed/tbosKpdPmH8" frameborder="0" allowfullscreen></iframe>
               </div>
             </div>
           </div>
@@ -764,12 +782,28 @@
         
         function ouvrirModal(id) {
           document.getElementById(id).classList.add('active');
-          document.body.style.overflow = 'hidden';
+          document.body.classList.add('modal-open');
+          document.querySelector('nav').classList.add('modal-open');
         }
+
         function fermerModal(id) {
           document.getElementById(id).classList.remove('active');
-          document.body.style.overflow = '';
+          document.body.classList.remove('modal-open');
+          document.querySelector('nav').classList.remove('modal-open');
+          document.querySelectorAll('#' + id + ' iframe').forEach(iframe => {
+            iframe.src = iframe.src;
+          });
         }
+        document.querySelectorAll('.shorts-scroll').forEach(scroll => {
+          scroll.addEventListener('click', (e) => {
+            const clickedIframe = e.target.closest('iframe');
+            if (!clickedIframe) return;
+            scroll.querySelectorAll('iframe').forEach(iframe => {
+              if (iframe !== clickedIframe) iframe.src = iframe.src;
+            });
+          });
+        });
+
 
     </script>
 
