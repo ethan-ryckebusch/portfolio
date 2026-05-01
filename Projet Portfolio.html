@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethan RYCKEBUSCH</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --accent: #1FEF9A;
+            --accent2: #21263E;
+            --bg: #080c10;
+            --surface: rgba(255,255,255,0.04);
+            --text: #f1f1f1;
+            --muted: #888;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            background: rgba(8, 12, 16, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(31, 239, 154, 0.15);
+            border-radius: 50px;
+            padding: 10px 28px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 6px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            transition: color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+            letter-spacing: 0.02em;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+            z-index: 1;
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(31,239,154,0.35) 0%, transparent 70%);
+            left: calc(var(--mx, 50%) - 40px);
+            top: calc(var(--my, 50%) - 40px);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        nav a:hover::before { opacity: 1; }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 60%);
+            border-radius: inherit;
+            pointer-events: none;
+        }
+
+        nav a:hover {
+            color: var(--text);
+            background: transparent;
+            backdrop-filter: none;
+            transform: none;
+            box-shadow: none;
+            border-color: transparent;
+        }
+
+        nav a.active {
+            color: #1FEF9A;
+            font-weight: 600;
+            border-color: transparent;
+        }
+
+        /* ─── HERO ─── */
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 0 24px;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.18;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .blob1 {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, #1FEF9A, #21263E);
+            top: 10%; left: 10%;
+            animation-delay: 0s;
+        }
+
+        .blob2 {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, #21263E, #1FEF9A);
+            bottom: 10%; right: 10%;
+            animation-delay: -4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+        }
+
+        .hero-tag {
+            display: inline-block;
+            background: rgba(31, 239, 154, 0.1);
+            border: 1px solid rgba(31, 239, 154, 0.3);
+            color: #1FEF9A;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 6px 18px;
+            border-radius: 50px;
+            margin-bottom: 28px;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #1FEF9A 50%, #21263E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: 1.15rem;
+            color: var(--muted);
+            max-width: 500px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+
+        /* ─── LIQUID GLASS BUTTON ─── */
+        .btn-glass {
+            --mx: 50%;
+            --my: 50%;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+            background: rgba(31, 239, 154, 0.12);
+            border: 1px solid rgba(31, 239, 154, 0.3);
+            color: #1FEF9A;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .btn-glass::before {
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(31,239,154,0.35) 0%, transparent 70%);
+            left: calc(var(--mx, 50%) - 60px);
+            top: calc(var(--my, 50%) - 60px);
+            pointer-events: none;
+            transition: opacity 0.3s;
+            opacity: 0;
+        }
+
+        .btn-glass:hover::before { opacity: 1; }
+
+        .btn-glass::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 60%);
+            border-radius: inherit;
+            pointer-events: none;
+        }
+
+        .btn-glass:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(31, 239, 154, 0.25);
+        }
+
+        .btn-glass.solid {
+            background: linear-gradient(135deg, #1FEF9A, #17c97d);
+            color: #080c10;
+            border: none;
+        }
+
+        .btn-glass.solid::before {
+            background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+        }
+
+        .btn-glass.solid:hover {
+            box-shadow: 0 8px 32px rgba(31, 239, 154, 0.4);
+        }
+
+        .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+
+        /* ─── SECTIONS ─── */
+        section {
+            padding: 120px 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #1FEF9A;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .section-desc {
+            color: var(--muted);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+
+        /* ─── ABOUT ─── */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 48px;
+        }
+        
+        .about-grid .about-card:last-child {
+            grid-column: 1 / -1;
+            
+        }
+
+        .about-card {
+            background: var(--surface);
+            border: 1px solid rgba(31, 239, 154, 0.1);
+            border-radius: 20px;
+            padding: 28px;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+
+        .about-card:hover {
+            border-color: rgba(31, 239, 154, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .about-card-icon { font-size: 1.8rem; margin-bottom: 12px; }
+        .about-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+        .about-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+
+        /* PROJECTS */
+        .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+        .project-card {
+          background: var(--surface);
+          border: 1px solid rgba(255,255,255,0.06);
+          border-radius: 20px;
+          overflow: hidden;
+          transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+          cursor: pointer;
+        }
+        .project-card:hover {
+          transform: translateY(-6px);
+          border-color: rgba(31,239,154,0.3);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .project-img {
+          width: 100%;
+          height: 200px;
+          object-fit: cover;
+          display: block;
+          background: var(--surface2);
+        }
+        .project-img-placeholder {
+          width: 100%;
+          height: 200px;
+          background: linear-gradient(135deg, rgba(31,239,154,0.1), rgba(79,142,247,0.1));
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 3rem;
+        }
+        .project-body { padding: 1.5rem; }
+        .project-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.8rem; }
+        .project-tag { padding: 0.2rem 0.6rem; border-radius: 50px; background: rgba(31,239,154,0.1); border: 1px solid rgba(31,239,154,0.2); font-size: 0.72rem; color: var(--accent); }
+        .project-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .project-desc { color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+        .project-link { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1rem; color: var(--accent); font-size: 0.85rem; text-decoration: none; font-weight: 600; transition: gap 0.2s; }
+        .project-link:hover { gap: 0.7rem; }
+        
+        .projects-grid .project-card:last-child {
+            grid-column: 1 / -1;
+            max-width: 50%;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* ─── CONTACT ─── */
+        .contact-box {
+            background: var(--surface);
+            border: 1px solid rgba(31,239,154,0.12);
+            border-radius: 28px;
+            padding: 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-box::before {
+            content: '';
+            position: absolute;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(31,239,154,0.08), transparent 70%);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .contact-box h2 { font-size: 2.2rem; font-weight: 800; margin-bottom: 16px; }
+        .contact-box p { color: var(--muted); margin-bottom: 36px; font-size: 1rem; line-height: 1.7; }
+
+        .contact-links {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            text-align: center;
+            padding: 40px 24px;
+            color: #444;
+            font-size: 0.82rem;
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 600px) {
+            .about-grid { grid-template-columns: 1fr; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .contact-box { padding: 36px 24px; }
+            nav { padding: 8px 16px; gap: 4px; }
+            nav a { padding: 6px 10px; font-size: 0.78rem; }
+            .projects-grid .project-card:last-child {
+                grid-column: 1;
+                max-width: 100%;
+            }
+        }
+
+        /* ─── CURSOR GLOW ─── */
+        .cursor-glow {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            pointer-events: none;
+            background: radial-gradient(circle, rgba(31,239,154,0.10), transparent 70%);
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            transition: opacity 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- NAV -->
+    <nav>
+        <a href="#hero" class="active">Accueil</a>
+        <a href="#about">À propos</a>
+        <a href="#projects">Projets</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <!-- HERO -->
+    <section id="hero">
+        <div class="blob blob1"></div>
+        <div class="blob blob2"></div>
+
+        <div class="hero-tag">Disponible pour vos projets</div>
+        <h1 class="hero-title">Ethan RYCKEBUSCH</h1>
+
+        <div class="hero-btns">
+            <a href="#projects" class="btn-glass solid">Voir mes projets →</a>
+            <a href="#contact" class="btn-glass">Me contacter</a>
+        </div>
+    </section>
+
+    <!-- À PROPOS -->
+    <section id="about">
+        <div class="section-label">✦ À propos</div>
+        <h2 class="section-title">Qui suis-je ?</h2>
+        <p class="section-desc">
+            Je conçois et fais avancer des projets de communication en mêlant stratégie, création et organisation.
+        </p>
+
+        <div class="about-grid">
+            <div class="about-card">
+                <div class="about-card-icon">🎬</div>
+                <h3>Création de Contenu</h3>
+                <p>Vidéos courtes, script, storytelling et montage pour capter l'attention et transmettre un message clair et percutant.</p>
+            </div>
+            <div class="about-card">
+                <div class="about-card-icon">⚡️</div>
+                <h3>Gestion de Projet</h3>
+                <p>Planification, coordination et suivi de projet de A à Z pour respecter les délais, le budget et les objectifs.</p>
+            </div>
+            <div class="about-card">
+                <div class="about-card-icon">🖥️</div>
+                <h3>Sites Web</h3>
+                <p>Conception et refonte de sites web, rapides et optimisés, pensés pour une UX fluide et cohérente sur tous les supports.</p>
+            </div>
+            <div class="about-card">
+                <div class="about-card-icon">🔍</div>
+                <h3>SEO & visibilité</h3>
+                <p>Recherche de mots-clés et optimisations pour améliorer la visibilité et générer du trafic qualifié.</p>
+        </div>
+        <div class="about-card">
+            <div class="about-card-icon">💡</div>
+            <h3>Formation & transmission</h3>
+            <p>Création et animation de cours, webinaires et ateliers pour partager des méthodes concrètes et aider à monter en compétences.</p>
+        </div>
+        </div>
+    </section>
+
+    <!-- PROJETS -->
+    <section id="projects">
+      <div class="section-label">✦ PROJETS</div>
+      <h2 class="section-title">Mes réalisations</h2>
+      <p class="section-desc">Une sélection de projets qui reflètent mon travail et ma créativité.</p>
+      <div class="projects-grid">
+
+        <!-- Projet 1 -->
+        <div class="project-card">
+          <img
+            class="project-img"
+            src="projet1.jpg"
+            alt="Image projet 1"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          >
+          <div class="project-img-placeholder" style="display:none;">🖼️</div>
+          <div class="project-body">
+            <div class="project-tags"><span class="project-tag">Freelance</span><span class="project-tag">Script</span><span class="project-tag">Montage</span></div>
+            <div class="project-title">Curieux ! Live</div>
+            <div class="project-desc">Écriture et montage de vidéos courtes. Travail sur le rythme, la narration et l’efficacité des formats, avec des contenus ayant atteint jusqu’à 755k vues.</div>
+            <a href="https://www.instagram.com/reel/DVJituSkiZk/" class="project-link" target="_blank">Voir le projet</a>
+          </div>
+        </div>
+
+        <!-- Projet 2 -->
+        <div class="project-card">
+          <img
+            class="project-img"
+            src="projet3.png"
+            alt="Image projet 3"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          >
+          <div class="project-img-placeholder" style="display:none;">🖼️</div>
+          <div class="project-body">
+            <div class="project-tags"><span class="project-tag">Freelance</span><span class="project-tag">Site Web</span><span class="project-tag">UX</span><span class="project-tag">SEO</span></div>
+            <div class="project-title">TC Conseils</div>
+            <div class="project-desc">Analyse des besoins et des objectifs pour repenser entièrement un site devenu obsolète. Conception d’une interface plus claire et actuelle, puis la mise en ligne avec transfert d’hébergement et vérifications techniques.</div>
+            <a href="https://tcconseils.com" class="project-link" target="_blank">Voir le projet</a>
+          </div>
+        </div>
+
+        <!-- Projet 3 -->
+        <div class="project-card">
+          <img
+            class="project-img"
+            src="projet2.png"
+            alt="Image projet 2"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          >
+          <div class="project-img-placeholder" style="display:none;">🖼️</div>
+          <div class="project-body">
+            <div class="project-tags"><span class="project-tag">Gestion de projet</span><span class="project-tag">Réseaux Sociaux</span></div>
+            <div class="project-title">Agora</div>
+            <div class="project-desc">Conception et coordination d’un média, structuration des formats, organisation de la production et pilotage des contenus, avec un travail sur la ligne éditoriale, la diffusion et l’animation d'une communauté.</div>
+            <a href="https://www.agora-media.fr" class="project-link" target="_blank">Voir le projet</a>
+          </div>
+        </div>
+
+        <!-- Projet 4 -->
+        <div class="project-card">
+          <img
+            class="project-img"
+            src="projet4.png"
+            alt="Image projet 4"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          >
+          <div class="project-img-placeholder" style="display:none;">🖼️</div>
+          <div class="project-body">
+            <div class="project-tags"><span class="project-tag">Gestion de projet</span><span class="project-tag">Event</span></div>
+            <div class="project-title">Handiscut'</div>
+            <div class="project-desc">Conception et coordination d’un projet événementiel autour des enjeux d’inclusion, mené en équipe. Travail sur le concept, les formats et l’expérience proposée, mêlant activités immersives, témoignages et stand up.</div>
+            <a href="https://www.linkedin.com/posts/ethan-ryckebusch_pourquoi-attendre-pour-faire-ce-qui-semble-activity-7271070963025248257-iJUk/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD5xxjMBe2hUxmMf8A9zW20LKC0YsksQsGY" class="project-link" target="_blank">Voir le projet</a>
+          </div>
+        </div>
+
+        <!-- Projet 5 -->
+        <div class="project-card">
+          <img
+            class="project-img"
+            src="projet5.png"
+            alt="Image projet 5"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          >
+          <div class="project-img-placeholder" style="display:none;">🖼️</div>
+          <div class="project-body">
+            <div class="project-tags"><span class="project-tag">Webinaire</span><span class="project-tag">Communication</span></div>
+            <div class="project-title">Echosciences Nouvelle-Aquitaine</div>
+            <div class="project-desc">Conception et présentation d’un webinaire autour de la communication événementielle, avec un focus sur la création print. Structuration du contenu, définition des messages clés et construction d’un déroulé pédagogique clair, pensé pour transmettre des méthodes concrètes et rendre les principes directement applicables.</div>
+          </div>
+        </div>
+        
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+        <div class="contact-box">
+            <h2>Travaillons ensemble</h2>
+            <p>Vous avez un projet en tête ? Je suis disponible pour des missions freelance et collaborations.</p>
+            <div class="contact-links">
+                <a href="mailto:ryckebusch.ethan@gmail.com" class="btn-glass solid">✉️ Envoyer un mail</a>
+                <a href="https://www.linkedin.com/in/ethan-ryckebusch/" class="btn-glass" target="_blank">💼 LinkedIn</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Ethan RYCKEBUSCH — SIRET : 940 894 132 00023</p>
+    </footer>
+
+    <script>
+        // ─── SLIDING PILL NAV ───
+        const navLinks = document.querySelectorAll('nav a');
+
+        const pill = document.createElement('div');
+        pill.style.cssText = `
+            position: absolute;
+            background: linear-gradient(135deg, rgba(31,239,154,0.18), rgba(31,239,154,0.08));
+            border-radius: 50px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            box-shadow: 0 4px 20px rgba(31, 239, 154, 0.2);
+            border: 1px solid rgba(31, 239, 154, 0.25);
+            z-index: 0;
+        `;
+        document.querySelector('nav').appendChild(pill);
+
+        function movePill(link) {
+            const navRect = document.querySelector('nav').getBoundingClientRect();
+            const linkRect = link.getBoundingClientRect();
+            pill.style.width = linkRect.width + 'px';
+            pill.style.height = linkRect.height + 'px';
+            pill.style.left = (linkRect.left - navRect.left) + 'px';
+            pill.style.top = (linkRect.top - navRect.top) + 'px';
+        }
+
+        const initialActive = document.querySelector('nav a.active');
+        if (initialActive) movePill(initialActive);
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(a => a.classList.remove('active'));
+                    const active = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+                    if (active) {
+                        active.classList.add('active');
+                        movePill(active);
+                    }
+                }
+            });
+        }, { threshold: 0, rootMargin: '-40% 0px -55% 0px' });
+
+        document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+
+        // ─── LIQUID GLASS ───
+        document.querySelectorAll('.btn-glass, nav a').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                btn.style.setProperty('--mx', ((e.clientX - rect.left) / rect.width * 100) + '%');
+                btn.style.setProperty('--my', ((e.clientY - rect.top) / rect.height * 100) + '%');
+            });
+            btn.addEventListener('mouseenter', () => {
+                btn.querySelector('::before');
+                btn.style.setProperty('--mx', '50%');
+                btn.style.setProperty('--my', '50%');
+            });
+        });
+
+
+        // ─── CURSOR GLOW ───
+        const glow = document.getElementById('cursorGlow');
+        document.addEventListener('mousemove', (e) => {
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+        });
+    </script>
+
+</body>
+</html>
