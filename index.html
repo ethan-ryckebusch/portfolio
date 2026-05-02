@@ -17,13 +17,17 @@
             --muted: #888;
         }
 
-        html { scroll-behavior: smooth; }
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
 
         body {
             background: var(--bg);
             color: var(--text);
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
             overflow-x: hidden;
+            max-width: 100%;
         }
 
         body::before {
@@ -123,7 +127,7 @@
             position: absolute;
             border-radius: 50%;
             filter: blur(90px);
-            opacity: 0.18;
+            opacity: 0.25;
             animation: float 8s ease-in-out infinite;
         }
 
@@ -283,7 +287,7 @@
             margin-bottom: 30px;
         }
 
-        /* ─── ABOUT ─── */
+        /* ─── A PROPOS ─── */
         .about-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -313,7 +317,7 @@
         .about-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
         .about-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
 
-        /* PROJECTS */
+        /* PROJETS */
         .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
         .project-card {
           background: var(--surface);
@@ -412,19 +416,19 @@
             }
         }
 
-        /* ─── CURSOR GLOW ─── */
+        /* ─── MOUSE BLOB ─── */
         .cursor-glow {
             position: fixed;
             width: 300px;
             height: 300px;
             pointer-events: none;
-            background: radial-gradient(circle, rgba(31,239,154,0.10), transparent 70%);
+            background: radial-gradient(circle, rgba(31,239,154,0.20), transparent 70%);
             transform: translate(-50%, -50%);
             z-index: 0;
             transition: opacity 0.3s;
         }
         
-        /* MODALE */
+        /* DESIGN MODAL */
         .modal-overlay {
           display: flex;
           position: fixed;
@@ -512,7 +516,7 @@
 
     <div class="cursor-glow" id="cursorGlow"></div>
 
-    <!-- NAV -->
+    <!-- MENU -->
     <nav>
         <a href="#hero" class="active">Accueil</a>
         <a href="#about">À propos</a>
@@ -520,7 +524,7 @@
         <a href="#contact">Contact</a>
     </nav>
 
-    <!-- HERO -->
+    <!-- HOOK -->
     <section id="hero">
         <div class="blob blob1"></div>
         <div class="blob blob2"></div>
@@ -711,11 +715,11 @@
     </section>
 
     <footer>
-        <p>© 2026 Ethan RYCKEBUSCH — SIRET : 940 894 132 00023</p>
+        <p>© 2026 zst production — SIRET : 940 894 132 00023</p>
     </footer>
 
     <script>
-        // ─── SLIDING PILL NAV ───
+        // ─── MENU TRANSITIONS ───
         const navLinks = document.querySelectorAll('nav a');
 
         const pill = document.createElement('div');
@@ -773,7 +777,7 @@
         });
 
 
-        // ─── CURSOR GLOW ───
+        // ─── TRANSITIONS MODAL ───
         const glow = document.getElementById('cursorGlow');
         document.addEventListener('mousemove', (e) => {
             glow.style.left = e.clientX + 'px';
@@ -805,32 +809,26 @@
         });
 
         // ─── TOUCH BLOB (mobile) ───
-        document.addEventListener('touchmove', (e) => {
+        let touchMoved = false;
+
+        document.addEventListener('touchstart', (e) => {
+            touchMoved = false;
             const touch = e.touches[0];
             glow.style.left = touch.clientX + 'px';
             glow.style.top = touch.clientY + 'px';
             glow.style.opacity = '1';
         }, { passive: true });
 
+        document.addEventListener('touchmove', (e) => {
+            touchMoved = true;
+            const touch = e.touches[0];
+            glow.style.left = touch.clientX + 'px';
+            glow.style.top = touch.clientY + 'px';
+        }, { passive: true });
+
         document.addEventListener('touchend', () => {
             glow.style.opacity = '0';
         });
-
-        // ─── GYROSCOPE (mobile) ───
-        if (window.DeviceOrientationEvent) {
-            window.addEventListener('deviceorientation', (e) => {
-                const blob1 = document.querySelector('.blob1');
-                const blob2 = document.querySelector('.blob2');
-
-                // beta = inclinaison avant/arrière (-180 à 180)
-                // gamma = inclinaison gauche/droite (-90 à 90)
-                const x = (e.gamma / 90) * 40;  // max 40px de déplacement
-                const y = (e.beta / 180) * 40;
-
-                blob1.style.transform = `translate(${x}px, ${y}px)`;
-                blob2.style.transform = `translate(${-x}px, ${-y}px)`;
-            });
-        }
 
     </script>
 
