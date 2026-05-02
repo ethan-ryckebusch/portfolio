@@ -415,10 +415,10 @@
             transform: translate(-50%, -50%);
             z-index: 0;
             transition: opacity 0.3s;
-            display: none; /* caché par défaut */
+            display: none;
         }
 
-        @media (min-width: 769px) {
+        @media (min-width: 600px) {
             .cursor-glow {
                 display: block;
             }
@@ -807,9 +807,12 @@
                 btn.style.setProperty('--my', '50%');
             });
         });
-        // ─── TRANSITIONS MODAL ───
+        // ─── CURSOR GLOW ───
         const glow = document.getElementById('cursorGlow');
-        if (window.innerWidth > 768) {
+        const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
+        if (!isTouch) {
+            glow.style.display = 'block';
             document.addEventListener('mousemove', (e) => {
                 glow.style.left = e.clientX + 'px';
                 glow.style.top = e.clientY + 'px';
