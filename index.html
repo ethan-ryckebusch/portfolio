@@ -415,6 +415,13 @@
             transform: translate(-50%, -50%);
             z-index: 0;
             transition: opacity 0.3s;
+            display: none; /* caché par défaut */
+        }
+
+        @media (min-width: 769px) {
+            .cursor-glow {
+                display: block;
+            }
         }
         /* DESIGN MODAL */
         .modal-overlay {
@@ -802,10 +809,12 @@
         });
         // ─── TRANSITIONS MODAL ───
         const glow = document.getElementById('cursorGlow');
-        document.addEventListener('mousemove', (e) => {
-            glow.style.left = e.clientX + 'px';
-            glow.style.top = e.clientY + 'px';
-        });
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => {
+                glow.style.left = e.clientX + 'px';
+                glow.style.top = e.clientY + 'px';
+            });
+        }
         
         function ouvrirModal(id) {
           document.getElementById(id).classList.add('active');
@@ -846,7 +855,7 @@
                     top: ${y}px;
                     transform: translate(-50%, -50%);
                     border-radius: 50%;
-                    background: radial-gradient(circle, rgba(31,239,154,0.06) 0%, rgba(31,239,154,0.02) 40%, transparent 70%);
+                    background: radial-gradient(circle, rgba(31,239,154,0.10) 0%, rgba(31,239,154,0.02) 40%, transparent 70%);
                     pointer-events: none;
                     z-index: 0;
                     opacity: 0;
