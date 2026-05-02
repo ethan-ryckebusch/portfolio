@@ -860,26 +860,39 @@
         });
 
         // ─── TOUCH BLOB (mobile) ───
-        let touchMoved = false;
+        let touchStartX, touchStartY, touchTimer;
 
         document.addEventListener('touchstart', (e) => {
-            touchMoved = false;
-            const touch = e.touches[0];
-            glow.style.left = touch.clientX + 'px';
-            glow.style.top = touch.clientY + 'px';
-            glow.style.opacity = '1';
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            
+            touchTimer = setTimeout(() => {
+                const touch = e.touches[0] || { clientX: touchStartX, clientY: touchStartY };
+                glow.style.transition = 'none';
+                glow.style.left = touchStartX + 'px';
+                glow.style.top = touchStartY + 'px';
+                glow.style.opacity = '1';
+            }, 120);
         }, { passive: true });
 
         document.addEventListener('touchmove', (e) => {
-            touchMoved = true;
             const touch = e.touches[0];
+            const dx = Math.abs(touch.clientX - touchStartX);
+            const dy = Math.abs(touch.clientY - touchStartY);
+            
+            if (dy > 10) {
+                clearTimeout(touchTimer);
+                return;
+            }
+            
             glow.style.left = touch.clientX + 'px';
             glow.style.top = touch.clientY + 'px';
         }, { passive: true });
 
         document.addEventListener('touchend', () => {
+            clearTimeout(touchTimer);
             setTimeout(() => {
-                glow.style.transition = 'opacity 1.5s';
+                glow.style.transition = 'opacity 1.0s';
                 glow.style.opacity = '0';
             }, 800);
         });
