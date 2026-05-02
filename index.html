@@ -501,13 +501,38 @@
           display: block;
         }
         body.modal-open {
-          overflow: hidden;
+          overflow: hidden !important;
+        }
+
+        html:has(body.modal-open) {
+          overflow: hidden !important;
         }
 
         nav.modal-open {
           pointer-events: none;
           opacity: 0.4;
           transition: opacity 0.3s ease;
+        }
+        
+        /* ─── Chargement vidéo ─── */
+        .short-placeholder {
+          width: 200px;
+          height: 355px;
+          border-radius: 10px;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.1);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          color: var(--muted);
+          font-size: 0.85rem;
+        }
+
+        .short-placeholder span {
+          font-size: 2rem;
+          opacity: 0.4;
         }
 
     </style>
@@ -605,33 +630,59 @@
             <button class="modal-close" onclick="fermerModal('modal-projet1')">✕</button>
             <h2 class="modal-title"></h2>
             <div class="shorts-scroll">
-                
-              <div class="short-item">
-                <iframe src="https://www.youtube.com/embed/iSCrmUu3Pt4" frameborder="0" allowfullscreen></iframe>
-              </div>
-              <div class="short-item">
-                <iframe src="https://www.youtube.com/embed/JDHjWzt9N8o" frameborder="0" allowfullscreen></iframe>
-              </div>
-              <div class="short-item">
-                <iframe src="https://www.youtube.com/embed/5OamQpHh0bE" frameborder="0" allowfullscreen></iframe>
-              </div>
-              <div class="short-item">
-                <iframe src="https://www.youtube.com/embed/M4QepnlmiZ8" frameborder="0" allowfullscreen></iframe>
-              </div>
-              <div class="short-item">
-                <iframe src="https://www.youtube.com/embed/fQcRiNrDiu4" frameborder="0" allowfullscreen></iframe>
-              </div>
-              <div class="short-item">
-                <iframe src="https://www.youtube.com/embed/rKBYTqwsbbU" frameborder="0" allowfullscreen></iframe>
-              </div>
-              <div class="short-item">
-                <iframe src="https://www.youtube.com/embed/tbosKpdPmH8" frameborder="0" allowfullscreen></iframe>
-              </div>
+                <div class="short-item">
+                  <div class="short-placeholder">
+                    <span>▶</span>
+                    <p>Chargement...</p>
+                  </div>
+                  <iframe src="https://www.youtube.com/embed/iSCrmUu3Pt4" frameborder="0" allowfullscreen onload="this.previousElementSibling.style.display='none'; this.style.display='block';" style="display:none;"></iframe>
+                </div>
+                <div class="short-item">
+                  <div class="short-placeholder">
+                    <span>▶</span>
+                    <p>Chargement...</p>
+                  </div>
+                  <iframe src="https://www.youtube.com/embed/JDHjWzt9N8o" frameborder="0" allowfullscreen onload="this.previousElementSibling.style.display='none'; this.style.display='block';" style="display:none;"></iframe>
+                </div>
+                <div class="short-item">
+                  <div class="short-placeholder">
+                    <span>▶</span>
+                    <p>Chargement...</p>
+                  </div>
+                  <iframe src="https://www.youtube.com/embed/5OamQpHh0bE" frameborder="0" allowfullscreen onload="this.previousElementSibling.style.display='none'; this.style.display='block';" style="display:none;"></iframe>
+                </div>
+                <div class="short-item">
+                  <div class="short-placeholder">
+                    <span>▶</span>
+                    <p>Chargement...</p>
+                  </div>
+                  <iframe src="https://www.youtube.com/embed/M4QepnlmiZ8" frameborder="0" allowfullscreen onload="this.previousElementSibling.style.display='none'; this.style.display='block';" style="display:none;"></iframe>
+                </div>
+                <div class="short-item">
+                  <div class="short-placeholder">
+                    <span>▶</span>
+                    <p>Chargement...</p>
+                  </div>
+                  <iframe src="https://www.youtube.com/embed/fQcRiNrDiu4" frameborder="0" allowfullscreen onload="this.previousElementSibling.style.display='none'; this.style.display='block';" style="display:none;"></iframe>
+                </div>
+                <div class="short-item">
+                  <div class="short-placeholder">
+                    <span>▶</span>
+                    <p>Chargement...</p>
+                  </div>
+                  <iframe src="https://www.youtube.com/embed/rKBYTqwsbbU" frameborder="0" allowfullscreen onload="this.previousElementSibling.style.display='none'; this.style.display='block';" style="display:none;"></iframe>
+                </div>
+                <div class="short-item">
+                  <div class="short-placeholder">
+                    <span>▶</span>
+                    <p>Chargement...</p>
+                  </div>
+                  <iframe src="https://www.youtube.com/embed/tbosKpdPmH8" frameborder="0" allowfullscreen onload="this.previousElementSibling.style.display='none'; this.style.display='block';" style="display:none;"></iframe>
+                </div>
             </div>
           </div>
         </div>
 
-        
         <!-- Projet 2 -->
         <div class="project-card">
           <img
@@ -645,7 +696,7 @@
             <div class="project-tags"><span class="project-tag">Freelance</span><span class="project-tag">Site Web</span><span class="project-tag">UX</span><span class="project-tag">SEO</span></div>
             <div class="project-title">TC Conseils</div>
             <div class="project-desc">Analyse des besoins et des objectifs pour repenser entièrement un site devenu obsolète. Conception d’une interface plus claire et actuelle, puis la mise en ligne avec transfert d’hébergement et vérifications techniques.</div>
-            <a href="https://tcconseils.com" class="project-link" target="_blank">Voir le projet</a>
+            <a href="https://tcconseils.com" class="project-link" target="_blank">Voir le projet →</a>
           </div>
         </div>
 
@@ -662,7 +713,7 @@
             <div class="project-tags"><span class="project-tag">Gestion de projet</span><span class="project-tag">Réseaux Sociaux</span></div>
             <div class="project-title">Agora</div>
             <div class="project-desc">Conception et coordination d’un média, structuration des formats, organisation de la production et pilotage des contenus, avec un travail sur la ligne éditoriale, la diffusion et l’animation d'une communauté.</div>
-            <a href="https://www.agora-media.fr" class="project-link" target="_blank">Voir le projet</a>
+            <a href="https://www.agora-media.fr" class="project-link" target="_blank">Voir le projet →</a>
           </div>
         </div>
 
@@ -679,7 +730,7 @@
             <div class="project-tags"><span class="project-tag">Gestion de projet</span><span class="project-tag">Event</span></div>
             <div class="project-title">Handiscut'</div>
             <div class="project-desc">Conception et coordination d’un projet événementiel autour des enjeux d’inclusion, mené en équipe. Travail sur le concept, les formats et l’expérience proposée, mêlant activités immersives, témoignages et stand up.</div>
-            <a href="https://www.linkedin.com/posts/ethan-ryckebusch_pourquoi-attendre-pour-faire-ce-qui-semble-activity-7271070963025248257-iJUk/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD5xxjMBe2hUxmMf8A9zW20LKC0YsksQsGY" class="project-link" target="_blank">Voir le projet</a>
+            <a href="https://www.linkedin.com/posts/ethan-ryckebusch_pourquoi-attendre-pour-faire-ce-qui-semble-activity-7271070963025248257-iJUk/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD5xxjMBe2hUxmMf8A9zW20LKC0YsksQsGY" class="project-link" target="_blank">Voir le projet →</a>
           </div>
         </div>
 
