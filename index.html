@@ -38,7 +38,6 @@
             pointer-events: none;
             z-index: 0;
         }
-
         /* ─── NAV ─── */
         nav {
             position: fixed;
@@ -110,7 +109,6 @@
             font-weight: 600;
             border-color: transparent;
         }
-
         /* ─── HERO ─── */
         #hero {
             min-height: 100vh;
@@ -183,7 +181,6 @@
             line-height: 1.7;
             margin-bottom: 40px;
         }
-
         /* ─── LIQUID GLASS BUTTON ─── */
         .btn-glass {
             --mx: 50%;
@@ -252,7 +249,6 @@
         }
 
         .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
-
         /* ─── SECTIONS ─── */
         section {
             padding: 120px 24px;
@@ -286,7 +282,6 @@
             max-width: 600px;
             margin-bottom: 30px;
         }
-
         /* ─── A PROPOS ─── */
         .about-grid {
             display: grid;
@@ -316,7 +311,6 @@
         .about-card-icon { font-size: 1.8rem; margin-bottom: 12px; }
         .about-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
         .about-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
-
         /* PROJETS */
         .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
         .project-card {
@@ -362,7 +356,6 @@
             margin: 0 auto;
             width: 100%;
         }
-
         /* ─── CONTACT ─── */
         .contact-box {
             background: var(--surface);
@@ -373,7 +366,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .contact-box::before {
             content: '';
             position: absolute;
@@ -393,7 +385,6 @@
             justify-content: center;
             flex-wrap: wrap;
         }
-
         /* ─── FOOTER ─── */
         footer {
             text-align: center;
@@ -402,7 +393,6 @@
             font-size: 0.82rem;
             border-top: 1px solid rgba(255,255,255,0.04);
         }
-
         /* ─── RESPONSIVE ─── */
         @media (max-width: 600px) {
             .about-grid { grid-template-columns: 1fr; }
@@ -415,7 +405,6 @@
                 max-width: 100%;
             }
         }
-
         /* ─── MOUSE BLOB ─── */
         .cursor-glow {
             position: fixed;
@@ -427,7 +416,6 @@
             z-index: 0;
             transition: opacity 0.3s;
         }
-        
         /* DESIGN MODAL */
         .modal-overlay {
           display: flex;
@@ -513,7 +501,6 @@
           opacity: 0.4;
           transition: opacity 0.3s ease;
         }
-        
         /* ─── Chargement vidéo ─── */
         .short-placeholder {
           width: 200px;
@@ -538,9 +525,7 @@
     </style>
 </head>
 <body>
-
     <div class="cursor-glow" id="cursorGlow"></div>
-
     <!-- MENU -->
     <nav>
         <a href="#hero" class="active">Accueil</a>
@@ -548,7 +533,6 @@
         <a href="#projects">Projets</a>
         <a href="#contact">Contact</a>
     </nav>
-
     <!-- HOOK -->
     <section id="hero">
         <div class="blob blob1"></div>
@@ -562,7 +546,6 @@
             <a href="#contact" class="btn-glass">Me contacter</a>
         </div>
     </section>
-
     <!-- À PROPOS -->
     <section id="about">
         <div class="section-label">✦ À propos</div>
@@ -599,14 +582,12 @@
         </div>
         </div>
     </section>
-
     <!-- PROJETS -->
     <section id="projects">
       <div class="section-label">✦ PROJETS</div>
       <h2 class="section-title">Mes réalisations</h2>
       <p class="section-desc">Une sélection de projets qui reflètent mon travail et ma créativité.</p>
       <div class="projects-grid">
-
         <!-- Projet 1 -->
         <div class="project-card">
           <img
@@ -623,7 +604,6 @@
             <a onclick="ouvrirModal('modal-projet1')" class="project-link" style="cursor:pointer;">Voir les projets →</a>
           </div>
         </div>
-
         <!-- MODALE PROJET 1 -->
         <div id="modal-projet1" class="modal-overlay" onclick="fermerModal('modal-projet1')">
           <div class="modal-box" onclick="event.stopPropagation()">
@@ -682,7 +662,6 @@
             </div>
           </div>
         </div>
-
         <!-- Projet 2 -->
         <div class="project-card">
           <img
@@ -699,7 +678,6 @@
             <a href="https://tcconseils.com" class="project-link" target="_blank">Voir le projet →</a>
           </div>
         </div>
-
         <!-- Projet 3 -->
         <div class="project-card">
           <img
@@ -716,7 +694,6 @@
             <a href="https://www.agora-media.fr" class="project-link" target="_blank">Voir le projet →</a>
           </div>
         </div>
-
         <!-- Projet 4 -->
         <div class="project-card">
           <img
@@ -733,7 +710,6 @@
             <a href="https://www.linkedin.com/posts/ethan-ryckebusch_pourquoi-attendre-pour-faire-ce-qui-semble-activity-7271070963025248257-iJUk/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD5xxjMBe2hUxmMf8A9zW20LKC0YsksQsGY" class="project-link" target="_blank">Voir le projet →</a>
           </div>
         </div>
-
         <!-- Projet 5 -->
         <div class="project-card">
           <img
@@ -752,7 +728,6 @@
         
       </div>
     </section>
-
     <!-- CONTACT -->
     <section id="contact">
         <div class="contact-box">
@@ -812,7 +787,6 @@
         }, { threshold: 0, rootMargin: '-40% 0px -55% 0px' });
 
         document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
-
         // ─── LIQUID GLASS ───
         document.querySelectorAll('.btn-glass, nav a').forEach(btn => {
             btn.addEventListener('mousemove', (e) => {
@@ -826,8 +800,6 @@
                 btn.style.setProperty('--my', '50%');
             });
         });
-
-
         // ─── TRANSITIONS MODAL ───
         const glow = document.getElementById('cursorGlow');
         document.addEventListener('mousemove', (e) => {
@@ -858,44 +830,44 @@
             });
           });
         });
-
-        // ─── TOUCH BLOB (mobile) ───
-        let touchStartX, touchStartY, touchTimer;
-
-        document.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-            
-            touchTimer = setTimeout(() => {
-                const touch = e.touches[0] || { clientX: touchStartX, clientY: touchStartY };
-                glow.style.transition = 'none';
-                glow.style.left = touchStartX + 'px';
-                glow.style.top = touchStartY + 'px';
-                glow.style.opacity = '1';
-            }, 120);
-        }, { passive: true });
-
-        document.addEventListener('touchmove', (e) => {
-            const touch = e.touches[0];
-            const dx = Math.abs(touch.clientX - touchStartX);
-            const dy = Math.abs(touch.clientY - touchStartY);
-            
-            if (dy > 10) {
-                clearTimeout(touchTimer);
-                return;
+        // ─── AMBIENT BLOBS (mobile) ───
+        if (window.innerWidth <= 768) {
+            function createAmbientBlob() {
+                const blob = document.createElement('div');
+                const size = Math.random() * 400 + 300;
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight;
+                
+                blob.style.cssText = `
+                    position: fixed;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${x}px;
+                    top: ${y}px;
+                    transform: translate(-50%, -50%);
+                    border-radius: 50%;
+                    background: radial-gradient(circle, rgba(31,239,154,0.06) 0%, rgba(31,239,154,0.02) 40%, transparent 70%);
+                    pointer-events: none;
+                    z-index: 0;
+                    opacity: 0;
+                    filter: blur(40px);
+                    transition: opacity 3s ease;
+                `;
+                
+                document.body.appendChild(blob);
+                
+                requestAnimationFrame(() => {
+                    blob.style.opacity = '1';
+                });
+                
+                setTimeout(() => {
+                    blob.style.opacity = '0';
+                    setTimeout(() => blob.remove(), 3000);
+                }, Math.random() * 3000 + 3000);
             }
-            
-            glow.style.left = touch.clientX + 'px';
-            glow.style.top = touch.clientY + 'px';
-        }, { passive: true });
 
-        document.addEventListener('touchend', () => {
-            clearTimeout(touchTimer);
-            setTimeout(() => {
-                glow.style.transition = 'opacity 1.0s';
-                glow.style.opacity = '0';
-            }, 800);
-        });
+            setInterval(createAmbientBlob, 2000);
+        }
     </script>
 
 </body>
