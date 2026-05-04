@@ -707,6 +707,20 @@
                   </div>
                   <iframe src="https://www.youtube.com/embed/tbosKpdPmH8" frameborder="0" allowfullscreen onload="this.previousElementSibling.style.display='none'; this.style.display='block';" style="display:none;"></iframe>
                 </div>
+                <div class="short-item">
+                  <div class="short-placeholder">
+                    <span>▶</span>
+                    <p>Chargement...</p>
+                  </div>
+                  <iframe src="https://www.youtube.com/embed/GjAnufRNluY" frameborder="0" allowfullscreen onload="this.previousElementSibling.style.display='none'; this.style.display='block';" style="display:none;"></iframe>
+                </div>
+                <div class="short-item">
+                  <div class="short-placeholder">
+                    <span>▶</span>
+                    <p>Chargement...</p>
+                  </div>
+                  <iframe src="https://www.youtube.com/embed/R5hA5e9F-XA" frameborder="0" allowfullscreen onload="this.previousElementSibling.style.display='none'; this.style.display='block';" style="display:none;"></iframe>
+                </div>
               </div>
               <button class="modal-arrow right" onclick="scrollVideos('modal-projet1', 1)">›</button>
             </div>
@@ -857,7 +871,8 @@
         if (!isTouch) {
             glow.style.display = 'block';
             let isDrawing = false;
-            let drawInterval = null;
+            document.addEventListener('dragstart', (e) => e.preventDefault());
+            document.addEventListener('selectstart', (e) => e.preventDefault());
 
             document.addEventListener('mousemove', (e) => {
                 glow.style.left = e.clientX + 'px';
