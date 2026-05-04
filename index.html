@@ -119,8 +119,8 @@
             font-weight: 600;
             border-color: transparent;
         }
-        /* ─── HERO ─── */
-        #hero {
+        /* ─── ACCUEIL ─── */
+        #accueil {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -158,7 +158,7 @@
             50% { transform: translateY(-30px) scale(1.05); }
         }
 
-        .hero-tag {
+        .accueil-tag {
             display: inline-block;
             background: rgba(31, 239, 154, 0.1);
             border: 1px solid rgba(31, 239, 154, 0.3);
@@ -172,7 +172,7 @@
             margin-bottom: 28px;
         }
 
-        .hero-title {
+        .accueil-title {
             font-size: clamp(3rem, 8vw, 7rem);
             font-weight: 800;
             line-height: 1.05;
@@ -184,7 +184,7 @@
             background-clip: text;
         }
 
-        .hero-sub {
+        .accueil-sub {
             font-size: 1.15rem;
             color: var(--muted);
             max-width: 500px;
@@ -258,7 +258,7 @@
             box-shadow: 0 8px 32px rgba(31, 239, 154, 0.4);
         }
 
-        .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+        .accueil-btns { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
         /* ─── SECTIONS ─── */
         section {
             padding: 120px 24px;
@@ -322,7 +322,7 @@
         .about-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
         .about-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
         /* PROJETS */
-        .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+        .projet-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
         .project-card {
           background: var(--surface);
           border: 1px solid rgba(255,255,255,0.06);
@@ -364,7 +364,7 @@
         .project-link { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1rem; color: var(--accent); font-size: 0.85rem; text-decoration: none; font-weight: 600; transition: gap 0.2s; }
         .project-link:hover { gap: 0.7rem; }
         
-        .projects-grid .project-card:last-child {
+        .projet-grid .project-card:last-child {
             grid-column: 1 / -1;
             max-width: 50%;
             margin: 0 auto;
@@ -410,11 +410,11 @@
         /* ─── RESPONSIVE ─── */
         @media (max-width: 600px) {
             .about-grid { grid-template-columns: 1fr; }
-            .projects-grid { grid-template-columns: 1fr; }
+            .projet-grid { grid-template-columns: 1fr; }
             .contact-box { padding: 36px 24px; }
             nav { padding: 8px 16px; gap: 4px; }
             nav a { padding: 6px 10px; font-size: 0.78rem; }
-            .projects-grid .project-card:last-child {
+            .projet-grid .project-card:last-child {
                 grid-column: 1;
                 max-width: 100%;
             }
@@ -574,26 +574,26 @@
     <div class="cursor-glow" id="cursorGlow"></div>
     <!-- MENU -->
     <nav>
-        <a href="#hero" class="active">Accueil</a>
-        <a href="#about">À propos</a>
-        <a href="#projects">Projets</a>
+        <a href="#accueil" class="active">Accueil</a>
+        <a href="#a-propos">À propos</a>
+        <a href="#projet">Projets</a>
         <a href="#contact">Contact</a>
     </nav>
     <!-- HOOK -->
-    <section id="hero">
+    <section id="accueil">
         <div class="blob blob1"></div>
         <div class="blob blob2"></div>
 
-        <div class="hero-tag">Disponible pour vos projets</div>
-        <h1 class="hero-title">Ethan RYCKEBUSCH</h1>
+        <div class="accueil-tag">Disponible pour vos projets</div>
+        <h1 class="accueil-title">Ethan RYCKEBUSCH</h1>
 
-        <div class="hero-btns">
-            <a href="#projects" class="btn-glass solid">Voir mes projets →</a>
+        <div class="accueil-btns">
+            <a href="#projet" class="btn-glass solid">Voir mes projets →</a>
             <a href="#contact" class="btn-glass">Me contacter</a>
         </div>
     </section>
     <!-- À PROPOS -->
-    <section id="about">
+    <section id="a-propos">
         <div class="section-label">✦ À propos</div>
         <h2 class="section-title">Qui suis-je ?</h2>
         <p class="section-desc">
@@ -629,11 +629,11 @@
         </div>
     </section>
     <!-- PROJETS -->
-    <section id="projects">
+    <section id="projet">
       <div class="section-label">✦ PROJETS</div>
       <h2 class="section-title">Mes réalisations</h2>
       <p class="section-desc">Une sélection de projets qui reflètent mon travail et ma créativité.</p>
-      <div class="projects-grid">
+      <div class="projet-grid">
         <!-- Projet 1 -->
         <div class="project-card" onclick="ouvrirModal('modal-projet1')" style="cursor:pointer;">
           <img
