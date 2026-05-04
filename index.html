@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ethan RYCKEBUSCH - Portfolio</title>
     <link rel="icon" type="image/png" href="favicon.png">
-        <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-4V6576XZKG"></script>
         <script>
           window.dataLayer = window.dataLayer || [];
@@ -37,6 +36,8 @@
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
             overflow-x: hidden;
             max-width: 100%;
+            user-select: none;
+                -webkit-user-select: none;
         }
 
         body::before {
@@ -330,6 +331,10 @@
           transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
           cursor: pointer;
         }
+        a.project-card {
+          text-decoration: none;
+          color: inherit;
+        }
         .project-card:hover {
           transform: translateY(-6px);
           border-color: rgba(31,239,154,0.3);
@@ -537,6 +542,31 @@
           font-size: 2rem;
           opacity: 0.4;
         }
+        .modal-videos-wrapper {
+          position: relative;
+        }
+
+        .modal-arrow {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          background: rgba(255,255,255,0.1);
+          border: none;
+          color: white;
+          font-size: 1.5rem;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          cursor: pointer;
+          z-index: 10;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background 0.2s;
+        }
+        .modal-arrow:hover { background: rgba(255,255,255,0.25); }
+        .modal-arrow.left  { left: -20px; }
+        .modal-arrow.right { right: -20px; }
 
     </style>
 </head>
@@ -605,7 +635,7 @@
       <p class="section-desc">Une sélection de projets qui reflètent mon travail et ma créativité.</p>
       <div class="projects-grid">
         <!-- Projet 1 -->
-        <div class="project-card">
+        <div class="project-card" onclick="ouvrirModal('modal-projet1')" style="cursor:pointer;">
           <img
             class="project-img"
             src="projet1.jpg"
@@ -616,8 +646,8 @@
           <div class="project-body">
             <div class="project-tags"><span class="project-tag">Freelance</span><span class="project-tag">Script</span><span class="project-tag">Montage</span></div>
             <div class="project-title">Curieux ! Live</div>
-            <div class="project-desc">Écriture et montage de vidéos courtes. Travail sur le rythme, la narration et l’efficacité des formats, avec des contenus ayant atteint jusqu’à 755k vues.</div>
-            <a onclick="ouvrirModal('modal-projet1')" class="project-link" style="cursor:pointer;">Voir les projets →</a>
+            <div class="project-desc">Écriture et montage de vidéos courtes. Travail sur le rythme, la narration et l'efficacité des formats, avec des contenus ayant atteint jusqu'à 755k vues.</div>
+            <span class="project-link">Voir les projets →</span>
           </div>
         </div>
         <!-- MODALE PROJET 1 -->
@@ -625,7 +655,9 @@
           <div class="modal-box" onclick="event.stopPropagation()">
             <button class="modal-close" onclick="fermerModal('modal-projet1')">✕</button>
             <h2 class="modal-title"></h2>
-            <div class="shorts-scroll">
+            <div class="modal-videos-wrapper">
+              <button class="modal-arrow left" onclick="scrollVideos('modal-projet1', -1)">‹</button>
+              <div class="shorts-scroll" id="videos-modal-projet1">
                 <div class="short-item">
                   <div class="short-placeholder">
                     <span>▶</span>
@@ -675,11 +707,13 @@
                   </div>
                   <iframe src="https://www.youtube.com/embed/tbosKpdPmH8" frameborder="0" allowfullscreen onload="this.previousElementSibling.style.display='none'; this.style.display='block';" style="display:none;"></iframe>
                 </div>
+              </div>
+              <button class="modal-arrow right" onclick="scrollVideos('modal-projet1', 1)">›</button>
             </div>
           </div>
         </div>
         <!-- Projet 2 -->
-        <div class="project-card">
+        <a href="https://tcconseils.com" class="project-card" target="_blank">
           <img
             class="project-img"
             src="projet3.png"
@@ -690,12 +724,12 @@
           <div class="project-body">
             <div class="project-tags"><span class="project-tag">Freelance</span><span class="project-tag">Site Web</span><span class="project-tag">UX</span><span class="project-tag">SEO</span></div>
             <div class="project-title">TC Conseils</div>
-            <div class="project-desc">Analyse des besoins et des objectifs pour repenser entièrement un site devenu obsolète. Conception d’une interface plus claire et actuelle, puis la mise en ligne avec transfert d’hébergement et vérifications techniques.</div>
-            <a href="https://tcconseils.com" class="project-link" target="_blank">Voir le projet →</a>
+            <div class="project-desc">Analyse des besoins et des objectifs pour repenser entièrement un site devenu obsolète. Conception d'une interface plus claire et actuelle, puis la mise en ligne avec transfert d'hébergement et vérifications techniques.</div>
+            <span class="project-link">Voir le projet →</span>
           </div>
-        </div>
+        </a>
         <!-- Projet 3 -->
-        <div class="project-card">
+        <a href="https://www.agora-media.fr" class="project-card" target="_blank">
           <img
             class="project-img"
             src="projet2.png"
@@ -706,12 +740,12 @@
           <div class="project-body">
             <div class="project-tags"><span class="project-tag">Gestion de projet</span><span class="project-tag">Réseaux Sociaux</span></div>
             <div class="project-title">Agora</div>
-            <div class="project-desc">Conception et coordination d’un média, structuration des formats, organisation de la production et pilotage des contenus, avec un travail sur la ligne éditoriale, la diffusion et l’animation d'une communauté.</div>
-            <a href="https://www.agora-media.fr" class="project-link" target="_blank">Voir le projet →</a>
+            <div class="project-desc">Conception et coordination d'un média, structuration des formats, organisation de la production et pilotage des contenus, avec un travail sur la ligne éditoriale, la diffusion et l'animation d'une communauté.</div>
+            <span class="project-link">Voir le projet →</span>
           </div>
-        </div>
+        </a>
         <!-- Projet 4 -->
-        <div class="project-card">
+        <a href="https://www.linkedin.com/posts/ethan-ryckebusch_pourquoi-attendre-pour-faire-ce-qui-semble-activity-7271070963025248257-iJUk/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD5xxjMBe2hUxmMf8A9zW20LKC0YsksQsGY" class="project-card" target="_blank">
           <img
             class="project-img"
             src="projet4.png"
@@ -722,10 +756,10 @@
           <div class="project-body">
             <div class="project-tags"><span class="project-tag">Gestion de projet</span><span class="project-tag">Event</span></div>
             <div class="project-title">Handiscut'</div>
-            <div class="project-desc">Conception et coordination d’un projet événementiel autour des enjeux d’inclusion, mené en équipe. Travail sur le concept, les formats et l’expérience proposée, mêlant activités immersives, témoignages et stand up.</div>
-            <a href="https://www.linkedin.com/posts/ethan-ryckebusch_pourquoi-attendre-pour-faire-ce-qui-semble-activity-7271070963025248257-iJUk/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD5xxjMBe2hUxmMf8A9zW20LKC0YsksQsGY" class="project-link" target="_blank">Voir le projet →</a>
+            <div class="project-desc">Conception et coordination d'un projet événementiel autour des enjeux d'inclusion, mené en équipe. Travail sur le concept, les formats et l'expérience proposée, mêlant activités immersives, témoignages et stand up.</div>
+            <span class="project-link">Voir le projet →</span>
           </div>
-        </div>
+        </a>
         <!-- Projet 5 -->
         <div class="project-card">
           <img
@@ -750,7 +784,7 @@
             <h2>Travaillons ensemble</h2>
             <p>Vous avez un projet en tête ? Je suis disponible pour des missions freelance et collaborations.</p>
             <div class="contact-links">
-                <a href="mailto:ryckebusch.ethan@gmail.com" class="btn-glass solid">✉️ Envoyer un mail</a>
+                <a href="mailto:ryckebusch.ethan@gmail.com" class="btn-glass solid" target="_blank">✉️ Envoyer un mail</a>
                 <a href="https://www.linkedin.com/in/ethan-ryckebusch/" class="btn-glass" target="_blank">💼 LinkedIn</a>
             </div>
         </div>
@@ -822,12 +856,55 @@
 
         if (!isTouch) {
             glow.style.display = 'block';
+            let isDrawing = false;
+            let drawInterval = null;
+
             document.addEventListener('mousemove', (e) => {
                 glow.style.left = e.clientX + 'px';
                 glow.style.top = e.clientY + 'px';
+
+                if (isDrawing) {
+                    spawnTrail(e.clientX, e.clientY);
+                }
             });
+
+            document.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                spawnTrail(e.clientX, e.clientY);
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDrawing = false;
+            });
+
+            function spawnTrail(x, y) {
+                const trail = document.createElement('div');
+                trail.style.cssText = `
+                    position: fixed;
+                    width: 200px;
+                    height: 200px;
+                    left: ${x}px;
+                    top: ${y}px;
+                    transform: translate(-50%, -50%);
+                    border-radius: 50%;
+                    background: radial-gradient(circle, rgba(31,239,154,0.1), transparent 70%);
+                    pointer-events: none;
+                    z-index: 0;
+                    opacity: 1;
+                    filter: blur(30px);
+                    transition: opacity 3s ease, transform 3s ease;
+                `;
+                document.body.appendChild(trail);
+
+                requestAnimationFrame(() => {
+                    trail.style.opacity = '0';
+                    trail.style.transform = 'translate(-50%, -50%) scale(2)';
+                });
+
+                setTimeout(() => trail.remove(), 3000);
+            }
         }
-        
+        // ─── MODAL ───
         function ouvrirModal(id) {
           document.getElementById(id).classList.add('active');
           document.body.classList.add('modal-open');
@@ -851,6 +928,10 @@
             });
           });
         });
+        function scrollVideos(modalId, direction) {
+          const container = document.getElementById('videos-' + modalId);
+          container.scrollBy({ left: direction * 340, behavior: 'smooth' });
+        }
         // ─── AMBIENT BLOBS (mobile) ───
         if (window.innerWidth <= 768) {
             function createAmbientBlob() {
