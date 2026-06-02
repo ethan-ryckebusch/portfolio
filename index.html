@@ -427,7 +427,7 @@
             pointer-events: none;
             background: radial-gradient(circle, rgba(31,239,154,0.12), transparent 70%);
             transform: translate(-50%, -50%);
-            z-index: 0;
+            z-index: -1;
             transition: opacity 0.3s;
             display: none;
         }
@@ -658,6 +658,20 @@
             <div class="modal-videos-wrapper">
               <button class="modal-arrow left" onclick="scrollVideos('modal-projet1', -1)">‹</button>
               <div class="shorts-scroll" id="videos-modal-projet1">
+                  <div class="short-item">
+                    <div class="short-placeholder">
+                      <span>▶</span>
+                      <p>Chargement...</p>
+                    </div>
+                    <iframe src="https://www.youtube.com/embed/eZ5QKlfjnPw" frameborder="0" allowfullscreen onload="this.previousElementSibling.style.display='none'; this.style.display='block';" style="display:none;"></iframe>
+                  </div>
+                  <div class="short-item">
+                    <div class="short-placeholder">
+                      <span>▶</span>
+                      <p>Chargement...</p>
+                    </div>
+                    <iframe src="https://www.youtube.com/embed/I4L8oneO7Ws" frameborder="0" allowfullscreen onload="this.previousElementSibling.style.display='none'; this.style.display='block';" style="display:none;"></iframe>
+                  </div>
                 <div class="short-item">
                   <div class="short-placeholder">
                     <span>▶</span>
@@ -904,7 +918,7 @@
                     border-radius: 50%;
                     background: radial-gradient(circle, rgba(31,239,154,0.1), transparent 70%);
                     pointer-events: none;
-                    z-index: 0;
+                    z-index: -1;
                     opacity: 1;
                     filter: blur(30px);
                     transition: opacity 3s ease, transform 3s ease;
