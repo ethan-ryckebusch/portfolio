@@ -36,8 +36,6 @@
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
             overflow-x: hidden;
             max-width: 100%;
-            user-select: none;
-                -webkit-user-select: none;
         }
 
         body::before {
@@ -119,6 +117,7 @@
             font-weight: 600;
             border-color: transparent;
         }
+        
         /* ─── ACCUEIL ─── */
         #accueil {
             min-height: 100vh;
@@ -205,7 +204,6 @@
             font-weight: 600;
             text-decoration: none;
             cursor: pointer;
-            border: none;
             overflow: hidden;
             transition: transform 0.2s ease, box-shadow 0.3s ease;
             background: rgba(31, 239, 154, 0.12);
@@ -345,7 +343,7 @@
           height: 200px;
           object-fit: cover;
           display: block;
-          background: var(--surface2);
+          background: var(--surface);
         }
         .project-img-placeholder {
           width: 100%;
@@ -873,66 +871,24 @@
                 btn.style.setProperty('--my', ((e.clientY - rect.top) / rect.height * 100) + '%');
             });
             btn.addEventListener('mouseenter', () => {
-                btn.querySelector('::before');
                 btn.style.setProperty('--mx', '50%');
                 btn.style.setProperty('--my', '50%');
             });
         });
+        
         // ─── CURSOR GLOW ───
         const glow = document.getElementById('cursorGlow');
         const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
         if (!isTouch) {
             glow.style.display = 'block';
-            let isDrawing = false;
-            document.addEventListener('dragstart', (e) => e.preventDefault());
-            document.addEventListener('selectstart', (e) => e.preventDefault());
 
             document.addEventListener('mousemove', (e) => {
                 glow.style.left = e.clientX + 'px';
                 glow.style.top = e.clientY + 'px';
-
-                if (isDrawing) {
-                    spawnTrail(e.clientX, e.clientY);
-                }
             });
-
-            document.addEventListener('mousedown', (e) => {
-                isDrawing = true;
-                spawnTrail(e.clientX, e.clientY);
-            });
-
-            document.addEventListener('mouseup', () => {
-                isDrawing = false;
-            });
-
-            function spawnTrail(x, y) {
-                const trail = document.createElement('div');
-                trail.style.cssText = `
-                    position: fixed;
-                    width: 200px;
-                    height: 200px;
-                    left: ${x}px;
-                    top: ${y}px;
-                    transform: translate(-50%, -50%);
-                    border-radius: 50%;
-                    background: radial-gradient(circle, rgba(31,239,154,0.1), transparent 70%);
-                    pointer-events: none;
-                    z-index: -1;
-                    opacity: 1;
-                    filter: blur(30px);
-                    transition: opacity 3s ease, transform 3s ease;
-                `;
-                document.body.appendChild(trail);
-
-                requestAnimationFrame(() => {
-                    trail.style.opacity = '0';
-                    trail.style.transform = 'translate(-50%, -50%) scale(2)';
-                });
-
-                setTimeout(() => trail.remove(), 3000);
-            }
         }
+        
         // ─── MODAL ───
         function ouvrirModal(id) {
           document.getElementById(id).classList.add('active');
@@ -962,7 +918,7 @@
           container.scrollBy({ left: direction * 340, behavior: 'smooth' });
         }
         // ─── AMBIENT BLOBS (mobile) ───
-        if (window.innerWidth <= 768) {
+        if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
             function createAmbientBlob() {
                 const blob = document.createElement('div');
                 const size = Math.random() * 400 + 300;
