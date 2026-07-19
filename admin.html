@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Vidéos Curieux ! Live</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --accent: #1FEF9A; --bg: #080c10; --surface: rgba(255,255,255,0.04); --text: #f1f1f1; --muted: #888; }
+  body {
+    background: var(--bg); color: var(--text); min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+  }
+  .card {
+    background: var(--surface); border: 1px solid rgba(31,239,154,0.15); border-radius: 20px;
+    padding: 40px; width: 100%; max-width: 440px;
+  }
+  h1 { font-size: 1.3rem; font-weight: 700; margin-bottom: 6px; }
+  .sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 28px; line-height: 1.6; }
+  label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 6px; margin-top: 16px; }
+  input {
+    width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px; padding: 12px 14px; color: var(--text); font-size: 0.92rem;
+  }
+  input:focus { outline: none; border-color: rgba(31,239,154,0.5); }
+  button {
+    cursor: pointer; border: none; border-radius: 50px; font-weight: 600; font-size: 0.9rem;
+    padding: 13px 22px; transition: transform 0.15s ease, box-shadow 0.2s ease;
+  }
+  button:active { transform: scale(0.97); }
+  .btn-solid { background: linear-gradient(135deg, #1FEF9A, #17c97d); color: #080c10; }
+  .btn-solid:hover { box-shadow: 0 8px 24px rgba(31,239,154,0.3); }
+  .btn-ghost { background: rgba(255,255,255,0.06); color: var(--text); border: 1px solid rgba(255,255,255,0.12); }
+  .row { display: flex; gap: 10px; margin-top: 22px; }
+  .msg { font-size: 0.82rem; margin-top: 14px; line-height: 1.5; }
+  .msg.err { color: #ff6b6b; }
+  .msg.ok { color: var(--accent); }
+  #panel { display: none; width: 100%; max-width: 720px; }
+  .panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+  .video-list { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; max-height: 50vh; overflow-y: auto; }
+  .video-row {
+    display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 8px 12px;
+  }
+  .video-row img { width: 64px; height: 48px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
+  .video-row .id { font-size: 0.8rem; color: var(--muted); flex: 1; word-break: break-all; }
+  .video-row .del {
+    background: rgba(255,80,80,0.12); color: #ff6b6b; border: 1px solid rgba(255,80,80,0.25);
+    border-radius: 50px; padding: 6px 12px; font-size: 0.78rem;
+  }
+  .add-row { display: flex; gap: 10px; }
+  .add-row input { flex: 1; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+
+  <div class="card" id="login">
+    <h1>Panneau admin</h1>
+    <p class="sub">Gère les vidéos de la modale « Curieux ! Live » sans toucher au code. Colle ton jeton d'accès GitHub pour te connecter (il reste uniquement dans ton navigateur).</p>
+    <label>Jeton d'accès GitHub (Personal Access Token)</label>
+    <input type="password" id="token" placeholder="github_pat_...">
+    <div class="row">
+      <button class="btn-solid" onclick="login()" style="flex:1">Se connecter</button>
+    </div>
+    <p class="msg" id="loginMsg"></p>
+    <p class="sub" style="margin-top:24px;font-size:0.76rem;">
+      Pas encore de jeton ? <a href="https://github.com/settings/personal-access-tokens/new" target="_blank">Crée-en un ici</a> :
+      choisis le dépôt <strong>ethan-ryckebusch/portfolio</strong> uniquement, et donne la permission
+      <strong>Contents: Read and write</strong>. Copie-le, colle-le ci-dessus (il ne s'affiche qu'une fois sur GitHub).
+    </p>
+  </div>
+
+  <div class="card" id="panel">
+    <div class="panel-head">
+      <h1 style="margin:0;">Vidéos — Curieux ! Live</h1>
+      <button class="btn-ghost" onclick="logout()">Se déconnecter</button>
+    </div>
+    <div class="video-list" id="videoList"></div>
+    <div class="add-row">
+      <input id="newVideo" placeholder="Colle un lien YouTube (ou l'ID)">
+      <button class="btn-ghost" onclick="addVideo()">Ajouter</button>
+    </div>
+    <div class="row">
+      <button class="btn-solid" onclick="save()" style="flex:1">Enregistrer sur le site</button>
+    </div>
+    <p class="msg" id="panelMsg"></p>
+  </div>
+
+<script>
+const REPO = 'ethan-ryckebusch/portfolio';
+const FILE_PATH = 'videos.json';
+const API = `https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`;
+
+let videos = [];
+let sha = null;
+
+function getToken() { return localStorage.getItem('gh_token'); }
+
+function extractId(input) {
+  input = input.trim();
+  if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
+  const patterns = [
+    /(?:youtu\.be\/|youtube\.com\/(?:shorts\/|embed\/|watch\?v=))([a-zA-Z0-9_-]{11})/
+  ];
+  for (const p of patterns) {
+    const m = input.match(p);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+async function login() {
+  const token = document.getElementById('token').value.trim();
+  const msg = document.getElementById('loginMsg');
+  if (!token) { msg.className = 'msg err'; msg.textContent = 'Colle ton jeton.'; return; }
+  msg.className = 'msg'; msg.textContent = 'Vérification…';
+  try {
+    const res = await fetch(API, { headers: { Authorization: `Bearer ${token}` } });
+    if (res.status === 401 || res.status === 403) throw new Error('Jeton invalide ou permissions insuffisantes.');
+    if (!res.ok && res.status !== 404) throw new Error('Erreur API GitHub (' + res.status + ').');
+    localStorage.setItem('gh_token', token);
+    if (res.status === 404) { videos = []; sha = null; }
+    else {
+      const data = await res.json();
+      sha = data.sha;
+      const decoded = decodeURIComponent(escape(atob(data.content)));
+      videos = JSON.parse(decoded).videos || [];
+    }
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('panel').style.display = 'block';
+    renderList();
+  } catch (e) {
+    msg.className = 'msg err';
+    msg.textContent = e.message;
+  }
+}
+
+function logout() {
+  localStorage.removeItem('gh_token');
+  document.getElementById('panel').style.display = 'none';
+  document.getElementById('login').style.display = 'block';
+  document.getElementById('token').value = '';
+}
+
+function renderList() {
+  const list = document.getElementById('videoList');
+  list.innerHTML = videos.map((id, i) => `
+    <div class="video-row">
+      <img src="https://img.youtube.com/vi/${id}/mqdefault.jpg" alt="">
+      <span class="id">${id}</span>
+      <button class="del" onclick="removeVideo(${i})">Retirer</button>
+    </div>
+  `).join('') || '<p class="sub">Aucune vidéo pour l\'instant.</p>';
+}
+
+function addVideo() {
+  const input = document.getElementById('newVideo');
+  const id = extractId(input.value);
+  const msg = document.getElementById('panelMsg');
+  if (!id) { msg.className = 'msg err'; msg.textContent = "Lien YouTube non reconnu."; return; }
+  if (videos.includes(id)) { msg.className = 'msg err'; msg.textContent = "Cette vidéo est déjà dans la liste."; return; }
+  videos.push(id);
+  input.value = '';
+  msg.textContent = '';
+  renderList();
+}
+
+function removeVideo(i) {
+  videos.splice(i, 1);
+  renderList();
+}
+
+async function save() {
+  const token = getToken();
+  const msg = document.getElementById('panelMsg');
+  msg.className = 'msg'; msg.textContent = 'Enregistrement…';
+  try {
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify({ videos }, null, 2))));
+    const body = {
+      message: 'Mise à jour des vidéos Curieux ! Live',
+      content,
+      ...(sha ? { sha } : {})
+    };
+    const res = await fetch(API, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error('Échec de l\'enregistrement (' + res.status + ').');
+    const data = await res.json();
+    sha = data.content.sha;
+    msg.className = 'msg ok';
+    msg.textContent = 'Enregistré ! Le site affichera les changements dans une minute ou deux (le temps que GitHub Pages republie).';
+  } catch (e) {
+    msg.className = 'msg err';
+    msg.textContent = e.message;
+  }
+}
+
+(function init() {
+  const token = getToken();
+  if (token) {
+    document.getElementById('token').value = token;
+    login();
+  }
+})();
+</script>
+</body>
+</html>
