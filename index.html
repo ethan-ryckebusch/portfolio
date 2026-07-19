@@ -850,12 +850,23 @@
           document.getElementById(id).classList.add('active');
           document.body.classList.add('modal-open');
           document.querySelector('nav').classList.add('modal-open');
+
+          const box = document.querySelector('#' + id + ' .modal-box');
+          const onEnd = (e) => {
+            if (e.propertyName === 'transform') {
+              box.style.transform = 'none';
+              box.removeEventListener('transitionend', onEnd);
+            }
+          };
+          box.addEventListener('transitionend', onEnd);
         }
 
         function fermerModal(id) {
           document.getElementById(id).classList.remove('active');
           document.body.classList.remove('modal-open');
           document.querySelector('nav').classList.remove('modal-open');
+          const box = document.querySelector('#' + id + ' .modal-box');
+          box.style.transform = '';
           document.querySelectorAll('#' + id + ' iframe').forEach(iframe => {
             iframe.src = iframe.src;
           });
