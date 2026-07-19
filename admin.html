@@ -42,9 +42,17 @@
   .video-row {
     display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 8px 12px;
+    cursor: grab; transition: border-color 0.2s, opacity 0.2s;
   }
-  .video-row img { width: 64px; height: 48px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
+  .video-row.dragging { opacity: 0.4; }
+  .video-row.drag-over { border-color: rgba(31,239,154,0.5); }
+  .video-row .handle { color: var(--muted); font-size: 1rem; flex-shrink: 0; }
+  .video-row img { width: 64px; height: 48px; object-fit: cover; border-radius: 6px; flex-shrink: 0; pointer-events: none; }
   .video-row .id { font-size: 0.8rem; color: var(--muted); flex: 1; word-break: break-all; }
+  .video-row .pending {
+    background: rgba(255,200,60,0.12); color: #ffc83c; border: 1px solid rgba(255,200,60,0.3);
+    border-radius: 50px; padding: 3px 10px; font-size: 0.7rem; flex-shrink: 0;
+  }
   .video-row .del {
     background: rgba(255,80,80,0.12); color: #ff6b6b; border: 1px solid rgba(255,80,80,0.25);
     border-radius: 50px; padding: 6px 12px; font-size: 0.78rem;
@@ -94,7 +102,9 @@ const FILE_PATH = 'videos.json';
 const API = `https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`;
 
 let videos = [];
+let savedVideos = [];
 let sha = null;
+let dragIndex = null;
 
 function getToken() { return localStorage.getItem('gh_token'); }
 
@@ -126,8 +136,9 @@ async function login() {
       const data = await res.json();
       sha = data.sha;
       const decoded = decodeURIComponent(escape(atob(data.content)));
-      videos = JSON.parse(decoded).videos || [];
+      videos = [...new Set(JSON.parse(decoded).videos || [])];
     }
+    savedVideos = [...videos];
     document.getElementById('login').style.display = 'none';
     document.getElementById('panel').style.display = 'block';
     renderList();
@@ -147,12 +158,42 @@ function logout() {
 function renderList() {
   const list = document.getElementById('videoList');
   list.innerHTML = videos.map((id, i) => `
-    <div class="video-row">
+    <div class="video-row" draggable="true" data-index="${i}"
+      ondragstart="onDragStart(event, ${i})" ondragover="onDragOver(event, ${i})"
+      ondrop="onDrop(event, ${i})" ondragend="onDragEnd(event)" ondragleave="onDragLeave(event)">
+      <span class="handle">⠿</span>
       <img src="https://img.youtube.com/vi/${id}/mqdefault.jpg" alt="">
       <span class="id">${id}</span>
+      ${!savedVideos.includes(id) ? '<span class="pending">En attente</span>' : ''}
       <button class="del" onclick="removeVideo(${i})">Retirer</button>
     </div>
   `).join('') || '<p class="sub">Aucune vidéo pour l\'instant.</p>';
+}
+
+function onDragStart(e, i) {
+  dragIndex = i;
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+function onDragOver(e, i) {
+  e.preventDefault();
+  if (i !== dragIndex) e.currentTarget.classList.add('drag-over');
+}
+function onDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+function onDrop(e, i) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (dragIndex === null || dragIndex === i) return;
+  const [moved] = videos.splice(dragIndex, 1);
+  videos.splice(i, 0, moved);
+  dragIndex = null;
+  renderList();
+}
+function onDragEnd(e) {
+  e.currentTarget.classList.remove('dragging');
+  document.querySelectorAll('.video-row.drag-over').forEach(el => el.classList.remove('drag-over'));
 }
 
 function addVideo() {
@@ -177,6 +218,8 @@ async function save() {
   const msg = document.getElementById('panelMsg');
   msg.className = 'msg'; msg.textContent = 'Enregistrement…';
   try {
+    videos = [...new Set(videos)];
+    renderList();
     const content = btoa(unescape(encodeURIComponent(JSON.stringify({ videos }, null, 2))));
     const body = {
       message: 'Mise à jour des vidéos Curieux ! Live',
@@ -191,6 +234,8 @@ async function save() {
     if (!res.ok) throw new Error('Échec de l\'enregistrement (' + res.status + ').');
     const data = await res.json();
     sha = data.content.sha;
+    savedVideos = [...videos];
+    renderList();
     msg.className = 'msg ok';
     msg.textContent = 'Enregistré ! Le site affichera les changements dans une minute ou deux (le temps que GitHub Pages republie).';
   } catch (e) {
