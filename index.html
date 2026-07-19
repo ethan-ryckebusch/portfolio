@@ -575,7 +575,33 @@
         .modal-videos-wrapper {
           position: relative;
         }
-
+        .short-thumb {
+            position: relative;
+            width: 200px; height: 355px;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            background: #111;
+        }
+        .short-thumb img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .short-thumb .play-badge {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 54px; height: 54px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.55);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #fff;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         .modal-arrow {
             background: rgba(255,255,255,0.1);
             width: 38px; height: 38px;
@@ -929,15 +955,18 @@
         
     </script>
     <script>
+    function playShort(el, id) {
+      el.outerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="width:200px;height:355px;border-radius:10px;display:block;"></iframe>`;
+    }
     fetch('videos.json?_=' + Date.now())
       .then(r => r.json())
       .then(data => {
         document.getElementById('videos-modal-projet1').innerHTML = data.videos.map(id => `
           <div class="short-item">
-            <div class="short-placeholder"><span>▶</span><p>Chargement...</p></div>
-            <iframe src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen
-              onload="this.previousElementSibling.style.display='none'; this.style.display='block';"
-              style="display:none;"></iframe>
+            <div class="short-thumb" onclick="playShort(this, '${id}')">
+              <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg" alt="">
+              <span class="play-badge">▶</span>
+            </div>
           </div>
         `).join('');
       });
