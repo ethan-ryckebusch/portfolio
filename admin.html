@@ -66,7 +66,7 @@
 
   <div class="card" id="login">
     <h1>Panneau admin</h1>
-    <p class="sub">Gère les vidéos de la modale « Curieux ! Live » sans toucher au code. Colle ton jeton d'accès GitHub pour te connecter (il reste uniquement dans ton navigateur).</p>
+    <p class="sub">Gère les vidéos de la modale « Curieux ! Live ». Colle ton jeton d'accès GitHub pour te connecter.</p>
     <label>Jeton d'accès GitHub (Personal Access Token)</label>
     <input type="password" id="token" placeholder="github_pat_...">
     <div class="row">
@@ -74,9 +74,7 @@
     </div>
     <p class="msg" id="loginMsg"></p>
     <p class="sub" style="margin-top:24px;font-size:0.76rem;">
-      Pas encore de jeton ? <a href="https://github.com/settings/personal-access-tokens/new" target="_blank">Crée-en un ici</a> :
-      choisis le dépôt <strong>ethan-ryckebusch/portfolio</strong> uniquement, et donne la permission
-      <strong>Contents: Read and write</strong>. Copie-le, colle-le ci-dessus (il ne s'affiche qu'une fois sur GitHub).
+      Pas encore de jeton ? <a href="https://github.com/settings/personal-access-tokens/new" target="_blank">Crée-en un ici</a>
     </p>
   </div>
 
@@ -87,11 +85,11 @@
     </div>
     <div class="video-list" id="videoList"></div>
     <div class="add-row">
-      <input id="newVideo" placeholder="Colle un lien YouTube (ou l'ID)">
+      <input id="newVideo" placeholder="Colle un lien YouTube (ou l'ID)" onkeydown="if(event.key==='Enter'){event.preventDefault();addVideo();}">
       <button class="btn-ghost" onclick="addVideo()">Ajouter</button>
     </div>
     <div class="row">
-      <button class="btn-solid" onclick="save()" style="flex:1">Enregistrer sur le site</button>
+      <button class="btn-solid" onclick="save()" style="flex:1">Enregistrer</button>
     </div>
     <p class="msg" id="panelMsg"></p>
   </div>
@@ -103,6 +101,7 @@ const API = `https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`;
 
 let videos = [];
 let savedVideos = [];
+let titles = {};
 let sha = null;
 let dragIndex = null;
 
@@ -110,15 +109,26 @@ function getToken() { return localStorage.getItem('gh_token'); }
 
 function extractId(input) {
   input = input.trim();
-  if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
   const patterns = [
-    /(?:youtu\.be\/|youtube\.com\/(?:shorts\/|embed\/|watch\?v=))([a-zA-Z0-9_-]{11})/
+    /(?:youtu\.be\/|youtube\.com\/(?:shorts\/|embed\/|live\/|watch\?v=))([a-zA-Z0-9_-]{11})/
   ];
   for (const p of patterns) {
     const m = input.match(p);
     if (m) return m[1];
   }
+  // bare ID: only accepted after live verification against YouTube (see addVideo)
+  if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
   return null;
+}
+
+async function fetchYoutubeInfo(id) {
+  try {
+    const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (e) {
+    return null;
+  }
 }
 
 async function login() {
@@ -142,6 +152,7 @@ async function login() {
     document.getElementById('login').style.display = 'none';
     document.getElementById('panel').style.display = 'block';
     renderList();
+    loadTitles();
   } catch (e) {
     msg.className = 'msg err';
     msg.textContent = e.message;
@@ -163,11 +174,20 @@ function renderList() {
       ondrop="onDrop(event, ${i})" ondragend="onDragEnd(event)" ondragleave="onDragLeave(event)">
       <span class="handle">⠿</span>
       <img src="https://img.youtube.com/vi/${id}/mqdefault.jpg" alt="">
-      <span class="id">${id}</span>
+      <span class="id">${titles[id] || id}</span>
       ${!savedVideos.includes(id) ? '<span class="pending">En attente</span>' : ''}
       <button class="del" onclick="removeVideo(${i})">Retirer</button>
     </div>
   `).join('') || '<p class="sub">Aucune vidéo pour l\'instant.</p>';
+}
+
+async function loadTitles() {
+  const missing = videos.filter(id => !titles[id]);
+  await Promise.all(missing.map(async id => {
+    const info = await fetchYoutubeInfo(id);
+    if (info && info.title) titles[id] = info.title;
+  }));
+  renderList();
 }
 
 function onDragStart(e, i) {
@@ -196,13 +216,20 @@ function onDragEnd(e) {
   document.querySelectorAll('.video-row.drag-over').forEach(el => el.classList.remove('drag-over'));
 }
 
-function addVideo() {
+async function addVideo() {
   const input = document.getElementById('newVideo');
+  const addBtn = document.querySelector('.add-row button');
   const id = extractId(input.value);
   const msg = document.getElementById('panelMsg');
   if (!id) { msg.className = 'msg err'; msg.textContent = "Lien YouTube non reconnu."; return; }
   if (videos.includes(id)) { msg.className = 'msg err'; msg.textContent = "Cette vidéo est déjà dans la liste."; return; }
-  videos.push(id);
+  msg.className = 'msg'; msg.textContent = 'Vérification sur YouTube…';
+  addBtn.disabled = true;
+  const info = await fetchYoutubeInfo(id);
+  addBtn.disabled = false;
+  if (!info) { msg.className = 'msg err'; msg.textContent = "Cette vidéo n'existe pas ou n'est pas publique sur YouTube."; return; }
+  if (info.title) titles[id] = info.title;
+  videos.unshift(id);
   input.value = '';
   msg.textContent = '';
   renderList();
