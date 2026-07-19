@@ -852,9 +852,13 @@
           document.querySelector('nav').classList.add('modal-open');
 
           const box = document.querySelector('#' + id + ' .modal-box');
+          const wrapper = document.querySelector('#' + id + ' .shorts-scroll');
           const onEnd = (e) => {
             if (e.propertyName === 'transform') {
               box.style.transform = 'none';
+              wrapper.style.display = 'none';
+              void wrapper.offsetHeight;
+              wrapper.style.display = 'flex';
               box.removeEventListener('transitionend', onEnd);
             }
           };
